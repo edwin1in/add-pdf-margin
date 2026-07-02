@@ -19,9 +19,15 @@ def change_margin(
         images = convert_from_path("test.pdf")
     except FileNotFoundError:
         raise FileNotFoundError("PDF not found")
+    except PDFInfoNotInstalledError:
+        raise RuntimeError("Poppler is not installed or not in PATH")
+    except PDFPageCountError:
+        raise ValueError("Could not read number of pages in PDF")
+    except PDFSyntaxError:
+        raise ValueError("PDF is corrupted or invalid")
 
-    if len(images) < 1:
-        raise FileNotFoundError("PDF contains no pages.")
+    if not images:
+        raise ValueError("PDF contains no pages.")
 
     pdf_width = images[0].width
     pdf_height = images[0].height
