@@ -16,7 +16,7 @@ def change_margin(
     bmargin: int = 0,
 ) -> None:
     try:
-        images = convert_from_path("test.pdf")
+        images = convert_from_path(pdfpath)
     except FileNotFoundError:
         raise FileNotFoundError("PDF not found")
     except PDFInfoNotInstalledError:
