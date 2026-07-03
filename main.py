@@ -18,7 +18,11 @@ parser.add_argument("--rmargin", type=float, default=0, help="set right margin s
 parser.add_argument("--tmargin", type=float, default=0, help="set top margin size")
 parser.add_argument("--bmargin", type=float, default=0, help="set bottom margin size")
 parser.add_argument(
-    "--unit", type=str, default="px", help="set margin unit [px, in, cm, mm]"
+    "--unit",
+    type=str,
+    default="px",
+    choices=["px", "in", "cm", "mm"],
+    help="set margin unit",
 )
 parser.add_argument("--output", type=str, default="", help="file name of output")
 
