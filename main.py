@@ -6,6 +6,21 @@ from pdf2image.exceptions import (
 )
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
+import warnings
+import argparse
+
+parser = argparse.ArgumentParser(
+    prog="main.py", description="add margins to PDF file(s)"
+)
+parser.add_argument("--path", type=str, default="", help="PDF file path")
+parser.add_argument("--lmargin", type=float, default=0, help="set left margin size")
+parser.add_argument("--rmargin", type=float, default=0, help="set right margin size")
+parser.add_argument("--tmargin", type=float, default=0, help="set top margin size")
+parser.add_argument("--bmargin", type=float, default=0, help="set bottom margin size")
+parser.add_argument(
+    "--unit", type=str, default="px", help="set margin unit [px, in, cm, mm]"
+)
+parser.add_argument("--output", type=str, default="", help="file name of output")
 
 
 def add_margin(
@@ -14,6 +29,7 @@ def add_margin(
     rmargin: int = 0,
     tmargin: int = 0,
     bmargin: int = 0,
+    output: str = "",
 ) -> None:
     try:
         images = convert_from_path(pdfpath)
@@ -37,7 +53,7 @@ def add_margin(
     ]
 
     c = canvas.Canvas(
-        "type.pdf",
+        f"{output}.pdf",
         pagesize=(pdf_width + (lmargin + rmargin), pdf_height + (tmargin + bmargin)),
     )
     for img in images:
@@ -50,8 +66,31 @@ def add_margin(
     c.save()
 
 
+def units_to_px(
+    unit: str, margins: tuple[float, float, float, float]
+) -> tuple[float, float, float, float]:
+    ppi = 96
+
+    factor = {"px": 1, "in": ppi, "cm": ppi / 2.54, "mm": ppi / 25.4}.get(unit)
+
+    if factor is None:
+        warnings.warn(
+            f"Unknown unit '{unit}'. No conversion applied; using raw pixel values.",
+            stacklevel=2,
+        )
+        return margins
+
+    return tuple(x * factor for x in margins)
+
+
 def main():
-    pass
+    args = parser.parse_args()
+
+    margins = units_to_px(
+        args.unit, (args.lmargin, args.rmargin, args.tmargin, args.bmargin)
+    )
+
+    add_margin(args.path, *margins, args.output)
 
 
 if __name__ == "__main__":
