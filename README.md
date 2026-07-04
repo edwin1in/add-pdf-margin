@@ -38,4 +38,4 @@ Most distros ship with `pdftoppm` and `pdftocairo`. If they are not installed, r
 
 >1. Install poppler: `conda install -c conda-forge poppler`
 
->2.Install pdf2image: `pip install pdf2image`
+>2. Install pdf2image: `pip install pdf2image`
