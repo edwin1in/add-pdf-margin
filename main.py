@@ -24,7 +24,7 @@ parser.add_argument(
     choices=["px", "in", "cm", "mm"],
     help="set margin unit",
 )
-parser.add_argument("--output", type=str, default="", help="file name of output")
+parser.add_argument("--output", type=str, help="file name of output")
 
 
 def add_margin(
@@ -94,6 +94,8 @@ def main():
         args.unit, (args.lmargin, args.rmargin, args.tmargin, args.bmargin)
     )
 
+    if args.output is None:
+        args.output = args.path.rsplit(".", 1)[0]
     add_margin(args.path, *margins, args.output)
 
 
