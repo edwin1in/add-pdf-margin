@@ -115,6 +115,9 @@ def main():
         )
         app.exec()
     else:
+        if not args.path:
+            raise ValueError("Path to the PDF file is required.")
+
         margins = units_to_px(
             args.unit, (args.lmargin, args.rmargin, args.tmargin, args.bmargin)
         )
